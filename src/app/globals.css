@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-dark-950 text-dark-100;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-dark-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-dark-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-dark-500;
+  }
+}
+
+@layer components {
+  .tool-textarea {
+    @apply w-full min-h-[200px] p-4 bg-dark-900 border border-dark-700 rounded-lg
+      text-dark-100 font-mono text-sm resize-y
+      focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent
+      placeholder:text-dark-500 transition-all;
+  }
+
+  .tool-input {
+    @apply w-full p-3 bg-dark-900 border border-dark-700 rounded-lg
+      text-dark-100 text-sm
+      focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent
+      placeholder:text-dark-500 transition-all;
+  }
+
+  .tool-btn {
+    @apply px-4 py-2 rounded-lg font-medium text-sm transition-all
+      disabled:opacity-50 disabled:cursor-not-allowed
+      active:scale-[0.98];
+  }
+
+  .tool-btn-primary {
+    @apply tool-btn bg-accent text-white hover:bg-accent-hover;
+  }
+
+  .tool-btn-secondary {
+    @apply tool-btn bg-dark-700 text-dark-200 hover:bg-dark-600;
+  }
+
+  .tool-card {
+    @apply p-6 bg-dark-900 border border-dark-700 rounded-xl
+      hover:border-accent/50 hover:shadow-lg hover:shadow-accent/5
+      transition-all duration-300 cursor-pointer;
+  }
+}
