@@ -88,4 +88,28 @@ export const tools: Tool[] = [
     href: "/weather",
     category: "工具",
   },
+  {
+    id: "datecalc",
+    name: "日期计算器",
+    description: "计算两个日期之间的差值，支持天、周、月、年等多种格式",
+    icon: "📐",
+    href: "/datecalc",
+    category: "工具",
+  },
+  {
+    id: "countdown",
+    name: "倒计时",
+    description: "距离各种重要日期的倒计时和已过天数，支持农历节日",
+    icon: "⏳",
+    href: "/countdown",
+    category: "工具",
+  },
+  {
+    id: "stock",
+    name: "股市信息",
+    description: "全球主要股市指数实时行情，涵盖 A 股、港股、美股等",
+    icon: "📈",
+    href: "/stock",
+    category: "工具",
+  },
 ];
