@@ -64,4 +64,28 @@ export const tools: Tool[] = [
     href: "/barcode",
     category: "生成器",
   },
+  {
+    id: "currency",
+    name: "汇率换算",
+    description: "人民币与主要货币实时汇率换算，支持双向转换",
+    icon: "¥",
+    href: "/currency",
+    category: "工具",
+  },
+  {
+    id: "calendar",
+    name: "日历",
+    description: "公历农历对照日历，显示农历节日和公历节日",
+    icon: "📅",
+    href: "/calendar",
+    category: "工具",
+  },
+  {
+    id: "weather",
+    name: "天气预报",
+    description: "多城市 7 天天气预报，显示温度、降水概率等详情",
+    icon: "🌤",
+    href: "/weather",
+    category: "工具",
+  },
 ];
