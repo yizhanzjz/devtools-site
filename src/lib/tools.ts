@@ -56,4 +56,12 @@ export const tools: Tool[] = [
     href: "/hash",
     category: "加密",
   },
+  {
+    id: "barcode",
+    name: "条形码生成器",
+    description: "支持 CODE128、EAN-13、UPC-A 等多种格式的条形码生成",
+    icon: "|||",
+    href: "/barcode",
+    category: "生成器",
+  },
 ];
