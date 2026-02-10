@@ -97,6 +97,42 @@ function daysBetween(a: Date, b: Date): number {
   return Math.round((bStart.getTime() - aStart.getTime()) / msPerDay);
 }
 
+/** Break down the distance between two dates into years, months, days */
+function dateDiff(from: Date, to: Date): { years: number; months: number; days: number; totalDays: number } {
+  const totalDays = daysBetween(from, to);
+
+  // Ensure from <= to for the calculation
+  let a = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+  let b = new Date(to.getFullYear(), to.getMonth(), to.getDate());
+  if (a > b) { const tmp = a; a = b; b = tmp; }
+
+  let years = b.getFullYear() - a.getFullYear();
+  let months = b.getMonth() - a.getMonth();
+  let days = b.getDate() - a.getDate();
+
+  if (days < 0) {
+    months--;
+    // Days in the previous month of b
+    const prevMonth = new Date(b.getFullYear(), b.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  return { years, months, days, totalDays: Math.abs(totalDays) };
+}
+
+/** Format a dateDiff result into a human-friendly string, showing only non-zero parts */
+function formatDiff(diff: { years: number; months: number; days: number; totalDays: number }): { parts: { value: number; unit: string }[]; totalDays: number } {
+  const parts: { value: number; unit: string }[] = [];
+  if (diff.years > 0) parts.push({ value: diff.years, unit: '年' });
+  if (diff.months > 0) parts.push({ value: diff.months, unit: '月' });
+  if (diff.days > 0 || parts.length === 0) parts.push({ value: diff.days, unit: '天' });
+  return { parts, totalDays: diff.totalDays };
+}
+
 function buildFestivalEvents(today: Date): CountdownEvent[] {
   const events: CountdownEvent[] = [];
 
@@ -247,13 +283,26 @@ export default function CountdownPage() {
               <div className="text-right">
                 {event.daysAway === 0 ? (
                   <span className="text-yellow-400 font-bold text-lg">🎉 就是今天！</span>
-                ) : (
-                  <>
-                    <span className="text-blue-300 text-xs">还有 </span>
-                    <span className="text-white font-bold text-2xl font-mono">{event.daysAway}</span>
-                    <span className="text-blue-300 text-xs"> 天</span>
-                  </>
-                )}
+                ) : (() => {
+                  const diff = dateDiff(today, event.date);
+                  const { parts, totalDays } = formatDiff(diff);
+                  return (
+                    <div>
+                      <div className="flex items-baseline justify-end gap-0.5">
+                        <span className="text-blue-300 text-xs">还有 </span>
+                        {parts.map((p, idx) => (
+                          <span key={idx} className="inline-flex items-baseline">
+                            <span className="text-white font-bold text-2xl font-mono">{p.value}</span>
+                            <span className="text-blue-300 text-xs">{p.unit}</span>
+                          </span>
+                        ))}
+                      </div>
+                      {parts.length > 1 && (
+                        <div className="text-dark-500 text-xs mt-0.5">共 {totalDays.toLocaleString()} 天</div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           ))}
@@ -280,9 +329,26 @@ export default function CountdownPage() {
               </div>
               <div className="text-dark-400 text-xs mb-2">{event.dateLabel}</div>
               <div className="text-right">
-                <span className="text-green-300 text-xs">已过 </span>
-                <span className="text-white font-bold text-2xl font-mono">{event.daysAway.toLocaleString()}</span>
-                <span className="text-green-300 text-xs"> 天</span>
+                {(() => {
+                  const diff = dateDiff(event.date, today);
+                  const { parts, totalDays } = formatDiff(diff);
+                  return (
+                    <div>
+                      <div className="flex items-baseline justify-end gap-0.5">
+                        <span className="text-green-300 text-xs">已过 </span>
+                        {parts.map((p, idx) => (
+                          <span key={idx} className="inline-flex items-baseline">
+                            <span className="text-white font-bold text-2xl font-mono">{p.value}</span>
+                            <span className="text-green-300 text-xs">{p.unit}</span>
+                          </span>
+                        ))}
+                      </div>
+                      {parts.length > 1 && (
+                        <div className="text-dark-500 text-xs mt-0.5">共 {totalDays.toLocaleString()} 天</div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           ))}
