@@ -94,13 +94,12 @@ export default function WeatherPage() {
       const params = new URLSearchParams({
         latitude: city.lat.toString(),
         longitude: city.lon.toString(),
-        current: 'temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code',
-        daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',
-        timezone: 'auto',
-        forecast_days: '7',
       });
-      const res = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const res = await fetch(`/api/weather?${params}`);
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `HTTP ${res.status}`);
+      }
       const json = await res.json();
 
       const dailyData: DailyWeather[] = json.daily.time.map((date: string, i: number) => ({

@@ -37,8 +37,11 @@ export default function CurrencyPage() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('https://api.exchangerate-api.com/v4/latest/CNY');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const res = await fetch('/api/currency');
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `HTTP ${res.status}`);
+      }
       const data = await res.json();
       setRates(data.rates || {});
       setUpdateTime(data.date || new Date().toISOString().slice(0, 10));
