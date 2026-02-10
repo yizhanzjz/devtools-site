@@ -52,9 +52,17 @@ export const tools: Tool[] = [
     id: "hash",
     name: "Hash 生成",
     description: "计算 MD5、SHA-256 等常用哈希值",
-    icon: "#",
+    icon: "✏️",
     href: "/hash",
     category: "加密",
+  },
+  {
+    id: "color",
+    name: "颜色工具",
+    description: "颜色选择器、格式转换、调色板生成和渐变生成器",
+    icon: "🎨",
+    href: "/color",
+    category: "设计",
   },
   {
     id: "barcode",
@@ -134,6 +142,14 @@ export const tools: Tool[] = [
     description: "解析 Cron 表达式，人类可读的中文解释和执行时间预测",
     icon: "⏰",
     href: "/cron",
+    category: "开发",
+  },
+  {
+    id: "markdown",
+    name: "Markdown",
+    description: "Markdown 实时预览编辑器，支持标准语法和代码高亮",
+    icon: "📝",
+    href: "/markdown",
     category: "开发",
   },
 ];
