@@ -3,6 +3,49 @@
 import { useState, useCallback, useEffect } from "react";
 import ToolLayout from "@/components/ToolLayout";
 import CopyButton from "@/components/CopyButton";
+import figlet from "figlet";
+
+// 导入字体
+import Standard from "figlet/importable-fonts/Standard";
+import Banner from "figlet/importable-fonts/Banner";
+import Big from "figlet/importable-fonts/Big";
+import Block from "figlet/importable-fonts/Block";
+import Doom from "figlet/importable-fonts/Doom";
+import Lean from "figlet/importable-fonts/Lean";
+import Mini from "figlet/importable-fonts/Mini";
+import Small from "figlet/importable-fonts/Small";
+import Slant from "figlet/importable-fonts/Slant";
+import Speed from "figlet/importable-fonts/Speed";
+import StarWars from "figlet/importable-fonts/Star Wars";
+import ANSI_Shadow from "figlet/importable-fonts/ANSI Shadow";
+import Calvin_S from "figlet/importable-fonts/Calvin S";
+import Cyberlarge from "figlet/importable-fonts/Cyberlarge";
+import DOS_Rebel from "figlet/importable-fonts/DOS Rebel";
+import Epic from "figlet/importable-fonts/Epic";
+import Graffiti from "figlet/importable-fonts/Graffiti";
+import Isometric1 from "figlet/importable-fonts/Isometric1";
+import Larry_3D from "figlet/importable-fonts/Larry 3D";
+
+// 注册字体
+figlet.parseFont("Standard", Standard);
+figlet.parseFont("Banner", Banner);
+figlet.parseFont("Big", Big);
+figlet.parseFont("Block", Block);
+figlet.parseFont("Doom", Doom);
+figlet.parseFont("Lean", Lean);
+figlet.parseFont("Mini", Mini);
+figlet.parseFont("Small", Small);
+figlet.parseFont("Slant", Slant);
+figlet.parseFont("Speed", Speed);
+figlet.parseFont("Star Wars", StarWars);
+figlet.parseFont("ANSI Shadow", ANSI_Shadow);
+figlet.parseFont("Calvin S", Calvin_S);
+figlet.parseFont("Cyberlarge", Cyberlarge);
+figlet.parseFont("DOS Rebel", DOS_Rebel);
+figlet.parseFont("Epic", Epic);
+figlet.parseFont("Graffiti", Graffiti);
+figlet.parseFont("Isometric1", Isometric1);
+figlet.parseFont("Larry 3D", Larry_3D);
 
 const FONTS = [
   { id: "Standard", name: "标准" },
@@ -16,7 +59,6 @@ const FONTS = [
   { id: "Slant", name: "斜体" },
   { id: "Speed", name: "速度" },
   { id: "Star Wars", name: "星球大战" },
-  { id: "3D-ASCII", name: "3D" },
   { id: "ANSI Shadow", name: "ANSI 阴影" },
   { id: "Calvin S", name: "Calvin" },
   { id: "Cyberlarge", name: "赛博" },
@@ -33,43 +75,33 @@ export default function AsciiPage() {
   const [input, setInput] = useState("Hello");
   const [selectedFont, setSelectedFont] = useState("Standard");
   const [output, setOutput] = useState<string>("");
-  const [loading, setLoading] = useState(false);
 
-  const generateAscii = useCallback(async (text: string, font: string) => {
+  const generateAscii = useCallback((text: string, font: string) => {
     if (!text.trim()) {
       setOutput("");
       return;
     }
 
-    setLoading(true);
     try {
-      const res = await fetch(
-        `/api/ascii?text=${encodeURIComponent(text)}&font=${encodeURIComponent(font)}`
-      );
-      const data = await res.json();
-      if (data.result) {
-        setOutput(data.result);
-      } else if (data.error) {
-        setOutput(`Error: ${data.error}`);
-      }
+      const result = figlet.textSync(text, {
+        font: font as figlet.Fonts,
+        horizontalLayout: "default",
+        verticalLayout: "default",
+      });
+      setOutput(result);
     } catch {
-      setOutput("请求失败，请重试");
-    } finally {
-      setLoading(false);
+      setOutput("生成失败，请尝试其他字体或输入");
     }
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      generateAscii(input, selectedFont);
-    }, 200);
-    return () => clearTimeout(timer);
+    generateAscii(input, selectedFont);
   }, [input, selectedFont, generateAscii]);
 
   return (
     <ToolLayout
       title="ASCII 艺术字"
-      description="使用 Figlet 将文本转换为 ASCII 艺术字，支持 20+ 种字体风格"
+      description="使用 Figlet 将文本转换为 ASCII 艺术字，支持 19 种字体风格"
     >
       <div>
         <label className="block text-sm text-dark-300 mb-2">输入文字</label>
@@ -120,12 +152,7 @@ export default function AsciiPage() {
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <label className="text-sm text-dark-300">
-            生成结果
-            {loading && (
-              <span className="ml-2 text-dark-500 text-xs">生成中...</span>
-            )}
-          </label>
+          <label className="text-sm text-dark-300">生成结果</label>
           {output && <CopyButton text={output} />}
         </div>
         <div className="p-4 bg-dark-900 border border-dark-700 rounded-lg overflow-x-auto min-h-[160px]">
