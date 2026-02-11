@@ -157,7 +157,15 @@ export default function AsciiPage() {
         </div>
         <div className="p-4 bg-dark-900 border border-dark-700 rounded-lg overflow-x-auto min-h-[160px]">
           {output ? (
-            <pre className="text-accent font-mono text-sm leading-tight whitespace-pre">
+            <pre
+              className="text-accent leading-none whitespace-pre"
+              style={{
+                fontFamily: "'Courier New', Courier, 'Liberation Mono', Consolas, monospace",
+                fontSize: "14px",
+                lineHeight: "1.15",
+                letterSpacing: "0px",
+              }}
+            >
               {output}
             </pre>
           ) : (

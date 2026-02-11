@@ -25,26 +25,36 @@ const FONTS: figlet.Fonts[] = [
   "Larry 3D",
 ];
 
+function generateAscii(
+  text: string,
+  font: figlet.Fonts
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    figlet.text(text, { font, horizontalLayout: "default", verticalLayout: "default" }, (err, result) => {
+      if (err || !result) reject(err || new Error("empty result"));
+      else resolve(result);
+    });
+  });
+}
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const text = searchParams.get("text") || "Hello";
   const font = (searchParams.get("font") || "Standard") as figlet.Fonts;
 
   try {
-    const result = figlet.textSync(text, {
-      font: font,
-      horizontalLayout: "default",
-      verticalLayout: "default",
-    });
-
+    const result = await generateAscii(text, font);
     return NextResponse.json({ result, font });
   } catch {
-    // 如果字体不存在，回退到 Standard
+    // 回退到 Standard
     try {
-      const result = figlet.textSync(text, { font: "Standard" });
+      const result = await generateAscii(text, "Standard");
       return NextResponse.json({ result, font: "Standard", fallback: true });
-    } catch {
-      return NextResponse.json({ error: "生成失败" }, { status: 500 });
+    } catch (e) {
+      return NextResponse.json(
+        { error: `生成失败: ${e instanceof Error ? e.message : String(e)}` },
+        { status: 500 }
+      );
     }
   }
 }
@@ -54,15 +64,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { text = "Hello", font = "Standard" } = body;
 
-    const result = figlet.textSync(text, {
-      font: font as figlet.Fonts,
-      horizontalLayout: "default",
-      verticalLayout: "default",
-    });
-
+    const result = await generateAscii(text, font as figlet.Fonts);
     return NextResponse.json({ result, font });
-  } catch {
-    return NextResponse.json({ error: "生成失败" }, { status: 500 });
+  } catch (e) {
+    return NextResponse.json(
+      { error: `生成失败: ${e instanceof Error ? e.message : String(e)}` },
+      { status: 500 }
+    );
   }
 }
 
