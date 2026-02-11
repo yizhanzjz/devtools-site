@@ -152,4 +152,12 @@ export const tools: Tool[] = [
     href: "/markdown",
     category: "开发",
   },
+  {
+    id: "ascii",
+    name: "ASCII 艺术",
+    description: "将文本转换为 ASCII 艺术字，支持多种字体风格",
+    icon: "🔤",
+    href: "/ascii",
+    category: "生成器",
+  },
 ];
